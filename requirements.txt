@@ -1,0 +1,12 @@
+# Text Adventure Game Dependencies
+
+# Testing framework
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Type checking (optional)
+mypy>=1.0.0
+
+# Code formatting (optional)
+black>=22.0.0
+flake8>=5.0.0
