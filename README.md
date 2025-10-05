@@ -1,6 +1,6 @@
-# 🧟 Zombie Survival Story - Text Adventure Game
+# 🧟 Zombie Survival Story - Flutter Edition
 
-A comprehensive text-based zombie survival adventure game built in Python. Survive the apocalypse, manage resources, fight zombies, and explore a detailed world as you try to make it home.
+A comprehensive text-based zombie survival adventure game built with Flutter/Dart. Survive the apocalypse, manage resources, fight zombies, and explore a detailed world as you try to make it home.
 
 ## 📖 Story
 
