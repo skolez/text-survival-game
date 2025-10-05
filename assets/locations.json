@@ -1,0 +1,247 @@
+[
+    {
+        "name": "Abandoned Gas Station",
+        "description": "You are at an abandoned gas station on the outskirts of Riverside. Broken windows and overturned fuel pumps tell a story of chaos. A few abandoned cars sit in the parking lot, their doors hanging open. One looks like it might be repairable.",
+        "actions": [
+            {"name": "Look around", "description": "Search the area for useful items and clues"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Search for fuel", "description": "Look for gasoline or diesel fuel"},
+            {"name": "Check abandoned cars", "description": "Search the vehicles for supplies or keys"},
+            {"name": "Repair vehicle", "description": "Try to fix a car for long-distance travel"},
+            {"name": "Rest here", "description": "Take a short rest to recover some energy"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Riverside Sporting Goods", "Riverside Supermarket", "Riverside Town Square", "Riverside Cemetery"],
+        "nearby_long": [],
+        "items": ["energy drink", "road map", "flashlight", "motor oil", "car battery", "tire iron", "crowbar"],
+        "parts_needed": ["car battery", "spark plugs", "motor oil"],
+        "has_repairable_vehicle": true,
+        "fuel_available": true,
+        "zombie_chance": 0.2,
+        "shelter": false,
+        "rest_bonus": 5
+    },
+    {
+        "name": "Riverside Sporting Goods",
+        "description": "A sporting goods store in downtown Riverside. The front windows are smashed, but the interior still holds promise. Camping gear and hunting equipment are scattered about.",
+        "actions": [
+            {"name": "Look around", "description": "Search for weapons and outdoor gear"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Search weapon section", "description": "Look for firearms and ammunition"},
+            {"name": "Check camping gear", "description": "Search for survival equipment"},
+            {"name": "Search storage room", "description": "Check the back room for supplies"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Abandoned Gas Station", "Riverside Supermarket", "Riverside Police Station"],
+        "nearby_long": [],
+        "items": ["hunting knife", "camping backpack", "sleeping bag", "compass", "binoculars", "spark plugs", "baseball bat"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.3,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Riverside Cemetery",
+        "description": "An old cemetery on the hill overlooking Riverside. Weathered headstones and overgrown paths create an eerie atmosphere. A small church sits at the center, its bell tower rising above the trees.",
+        "actions": [
+            {"name": "Look around", "description": "Search among the headstones and monuments"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Search church", "description": "Explore the abandoned church building"},
+            {"name": "Check mausoleums", "description": "Investigate the larger burial structures"},
+            {"name": "Climb bell tower", "description": "Access the church bell tower (requires church key)"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Riverside Town Square", "Riverside Supermarket"],
+        "nearby_long": [],
+        "items": ["rusty church key", "holy water", "candles", "old bible", "flowers"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.4,
+        "shelter": false,
+        "rest_bonus": 0,
+        "hidden_location": "Riverside Church Bell Tower"
+    },
+    {
+        "name": "Riverside Church Bell Tower",
+        "description": "A secure bell tower high above the cemetery. The heavy wooden door can be barred from inside, and the height provides an excellent view of the surrounding area. This feels like the safest place you've found.",
+        "actions": [
+            {"name": "Look around", "description": "Survey the area from this high vantage point"},
+            {"name": "Rest safely", "description": "Take a secure rest in this defensible position"},
+            {"name": "Descend to cemetery", "description": "Climb back down to the cemetery"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Riverside Cemetery"],
+        "nearby_long": [],
+        "items": ["emergency radio", "first aid kit", "canned food"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.0,
+        "shelter": true,
+        "secure_location": true,
+        "rest_bonus": 25,
+        "requires_item": "rusty church key",
+        "hidden": true
+    },
+    {
+        "name": "Riverside Supermarket",
+        "description": "A large supermarket in Riverside. Most shelves are empty, but there might still be some food and supplies hidden in the back areas. The pharmacy section looks promising.",
+        "actions": [
+            {"name": "Look around", "description": "Search the main store area"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Search pharmacy", "description": "Look for medical supplies"},
+            {"name": "Check storage room", "description": "Search the employee areas"},
+            {"name": "Search for food", "description": "Look for any remaining food items"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Abandoned Gas Station", "Riverside Sporting Goods", "Riverside Hospital"],
+        "nearby_long": [],
+        "items": ["canned food", "water bottle", "first aid kit", "painkillers", "energy bar", "kitchen knife", "meat cleaver"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.4,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Riverside Town Square",
+        "description": "The heart of Riverside, now eerily quiet. A fountain sits in the center, surrounded by abandoned shops and offices. Several roads lead out of town from here.",
+        "actions": [
+            {"name": "Look around", "description": "Survey the area and plan your next move"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Search abandoned shops", "description": "Check the small businesses around the square"},
+            {"name": "Check road signs", "description": "Look for directions to other towns"},
+            {"name": "Travel to distant location", "description": "Use a vehicle to travel to another town"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Abandoned Gas Station", "Riverside Police Station", "Riverside Hospital"],
+        "nearby_long": ["Millbrook Town Center", "Oakville Main Street", "Pine Ridge Outpost"],
+        "items": ["road atlas", "city map", "coins", "newspaper"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.5,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Riverside Police Station",
+        "description": "The Riverside Police Station. The front door is barricaded, but there might be another way in. This could be a good source of weapons and secure shelter.",
+        "actions": [
+            {"name": "Look around", "description": "Search the exterior and look for entry points"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Try front entrance", "description": "Attempt to get through the barricaded door"},
+            {"name": "Check back entrance", "description": "Look for an alternate way inside"},
+            {"name": "Search police cars", "description": "Check the abandoned patrol vehicles"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Riverside Sporting Goods", "Riverside Town Square", "Riverside Hospital"],
+        "nearby_long": [],
+        "items": ["pistol", "ammunition", "radio", "handcuffs", "flashlight", "jumper cables", "police baton", "tactical vest"],
+        "parts_needed": [],
+        "fuel_available": true,
+        "zombie_chance": 0.3,
+        "shelter": true,
+        "rest_bonus": 15
+    },
+    {
+        "name": "Riverside Hospital",
+        "description": "Riverside General Hospital. The emergency room doors are wide open, and medical equipment is scattered everywhere. This place is dangerous but could have valuable medical supplies.",
+        "actions": [
+            {"name": "Look around", "description": "Carefully survey the hospital lobby"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Riverside"},
+            {"name": "Search emergency room", "description": "Look for medical supplies in the ER"},
+            {"name": "Check pharmacy", "description": "Try to access the hospital pharmacy"},
+            {"name": "Search patient rooms", "description": "Check the rooms for supplies"}
+        ],
+        "town": "Riverside",
+        "nearby_short": ["Riverside Supermarket", "Riverside Police Station", "Riverside Town Square"],
+        "nearby_long": [],
+        "items": ["antibiotics", "morphine", "surgical kit", "IV bag", "wheelchair", "scalpel"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.7,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Millbrook Town Center",
+        "description": "You've arrived in Millbrook, a smaller town about 30 miles from Riverside. The town center has a few key buildings and looks less damaged than Riverside. Your vehicle has broken down and won't start again.",
+        "actions": [
+            {"name": "Look around", "description": "Survey this new town"},
+            {"name": "Move to nearby location", "description": "Explore Millbrook on foot"},
+            {"name": "Search for new vehicle", "description": "Look for another car to repair"},
+            {"name": "Check local shops", "description": "Search the small businesses"},
+            {"name": "Find shelter", "description": "Look for a safe place to rest"}
+        ],
+        "town": "Millbrook",
+        "nearby_short": ["Millbrook Auto Shop", "Millbrook General Store", "Millbrook Church"],
+        "nearby_long": ["Oakville Main Street", "Pine Ridge Outpost"],
+        "items": ["town map", "local newspaper", "keys", "wallet"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.3,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Millbrook Auto Shop",
+        "description": "A small auto repair shop in Millbrook. Tools and car parts are scattered around. This might be the perfect place to find parts to repair another vehicle.",
+        "actions": [
+            {"name": "Look around", "description": "Search for automotive tools and parts"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Millbrook"},
+            {"name": "Search for car parts", "description": "Look for specific vehicle components"},
+            {"name": "Check the garage", "description": "Search the main work area"},
+            {"name": "Look for vehicles", "description": "See if there are any cars to repair"}
+        ],
+        "town": "Millbrook",
+        "nearby_short": ["Millbrook Town Center", "Millbrook General Store", "Millbrook Farm"],
+        "has_repairable_vehicle": true,
+        "nearby_long": [],
+        "items": ["wrench set", "car jack", "tire iron", "alternator", "radiator", "brake pads", "transmission fluid", "hammer", "pipe wrench"],
+        "parts_needed": ["alternator", "radiator", "brake pads", "transmission fluid"],
+        "fuel_available": true,
+        "zombie_chance": 0.2,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Millbrook General Store",
+        "description": "A classic small-town general store. The shelves are mostly empty, but there might be some useful supplies in the storage areas.",
+        "actions": [
+            {"name": "Look around", "description": "Search the main store area"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Millbrook"},
+            {"name": "Check storage room", "description": "Search the back storage area"},
+            {"name": "Search for food", "description": "Look for any remaining food items"},
+            {"name": "Check cash register", "description": "Look for money or keys"}
+        ],
+        "town": "Millbrook",
+        "nearby_short": ["Millbrook Town Center", "Millbrook Auto Shop", "Millbrook Church"],
+        "nearby_long": [],
+        "items": ["beef jerky", "soda", "batteries", "duct tape", "rope"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.3,
+        "shelter": false,
+        "rest_bonus": 0
+    },
+    {
+        "name": "Millbrook Church",
+        "description": "A small white church on a hill overlooking Millbrook. The doors are locked, but it looks like a safe place that might offer good shelter and rest.",
+        "actions": [
+            {"name": "Look around", "description": "Search the church grounds"},
+            {"name": "Move to nearby location", "description": "Travel to another location in Millbrook"},
+            {"name": "Try to enter church", "description": "Attempt to get inside the building"},
+            {"name": "Check cemetery", "description": "Search the graveyard behind the church"},
+            {"name": "Rest on porch", "description": "Take a rest on the church steps"}
+        ],
+        "town": "Millbrook",
+        "nearby_short": ["Millbrook Town Center", "Millbrook General Store", "Millbrook Farm"],
+        "nearby_long": [],
+        "items": ["candles", "matches", "blanket", "bible"],
+        "parts_needed": [],
+        "fuel_available": false,
+        "zombie_chance": 0.1,
+        "shelter": true,
+        "rest_bonus": 20
+    }
+]
