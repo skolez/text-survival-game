@@ -17,7 +17,7 @@
         "parts_needed": ["car battery", "spark plugs", "motor oil"],
         "has_repairable_vehicle": true,
         "fuel_available": true,
-        "zombie_chance": 0.2,
+        "zombie_chance": 0.1,
         "shelter": false,
         "rest_bonus": 5
     },
@@ -37,7 +37,7 @@
         "items": ["hunting knife", "camping backpack", "sleeping bag", "compass", "binoculars", "spark plugs", "baseball bat"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.3,
+        "zombie_chance": 0.15,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -57,7 +57,7 @@
         "items": ["rusty church key", "holy water", "candles", "old bible", "flowers"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.4,
+        "zombie_chance": 0.2,
         "shelter": false,
         "rest_bonus": 0,
         "hidden_location": "Riverside Church Bell Tower"
@@ -99,7 +99,7 @@
         "items": ["canned food", "water bottle", "first aid kit", "painkillers", "energy bar", "kitchen knife", "meat cleaver"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.4,
+        "zombie_chance": 0.2,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -119,7 +119,7 @@
         "items": ["road atlas", "city map", "coins", "newspaper"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.5,
+        "zombie_chance": 0.2,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -139,7 +139,7 @@
         "items": ["pistol", "ammunition", "radio", "handcuffs", "flashlight", "jumper cables", "police baton", "tactical vest"],
         "parts_needed": [],
         "fuel_available": true,
-        "zombie_chance": 0.3,
+        "zombie_chance": 0.15,
         "shelter": true,
         "rest_bonus": 15
     },
@@ -159,7 +159,7 @@
         "items": ["antibiotics", "morphine", "surgical kit", "IV bag", "wheelchair", "scalpel"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.7,
+        "zombie_chance": 0.35,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -179,7 +179,7 @@
         "items": ["town map", "local newspaper", "keys", "wallet"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.3,
+        "zombie_chance": 0.15,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -200,7 +200,7 @@
         "items": ["wrench set", "car jack", "tire iron", "alternator", "radiator", "brake pads", "transmission fluid", "hammer", "pipe wrench"],
         "parts_needed": ["alternator", "radiator", "brake pads", "transmission fluid"],
         "fuel_available": true,
-        "zombie_chance": 0.2,
+        "zombie_chance": 0.1,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -220,7 +220,7 @@
         "items": ["beef jerky", "soda", "batteries", "duct tape", "rope"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.3,
+        "zombie_chance": 0.15,
         "shelter": false,
         "rest_bonus": 0
     },
@@ -240,7 +240,7 @@
         "items": ["candles", "matches", "blanket", "bible"],
         "parts_needed": [],
         "fuel_available": false,
-        "zombie_chance": 0.1,
+        "zombie_chance": 0.05,
         "shelter": true,
         "rest_bonus": 20
     }

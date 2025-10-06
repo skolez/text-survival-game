@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 class GameState {
@@ -55,27 +54,51 @@ class GameState {
   Map<String, Map<String, bool>> vehiclePartsInstalled = {};
   List<String> townsVisited = ["Riverside"]; // Starting town
 
+  bool get hasWorkingVehicle =>
+      currentVehicle != null && vehicleCondition >= 30;
+
   GameState();
 
   // Item effects mapping
   static const Map<String, Map<String, dynamic>> itemEffects = {
     // Food items
-    "canned food": {"health": 5, "hunger": 25, "consumable": true, "weight": 0.5},
-    "energy bar": {"health": 2, "hunger": 15, "fatigue": -5, "consumable": true, "weight": 0.2},
+    "canned food": {
+      "health": 5,
+      "hunger": 25,
+      "consumable": true,
+      "weight": 0.5
+    },
+    "energy bar": {
+      "health": 2,
+      "hunger": 15,
+      "fatigue": -5,
+      "consumable": true,
+      "weight": 0.2
+    },
     "beef jerky": {"hunger": 20, "consumable": true, "weight": 0.3},
     "crackers": {"hunger": 10, "consumable": true, "weight": 0.2},
     "chocolate": {"health": 3, "hunger": 8, "consumable": true, "weight": 0.1},
 
     // Drinks
     "water bottle": {"thirst": 30, "consumable": true, "weight": 0.5},
-    "energy drink": {"thirst": 15, "fatigue": -10, "consumable": true, "weight": 0.4},
+    "energy drink": {
+      "thirst": 15,
+      "fatigue": -10,
+      "consumable": true,
+      "weight": 0.4
+    },
     "soda": {"thirst": 20, "hunger": 5, "consumable": true, "weight": 0.4},
     "coffee": {"thirst": 10, "fatigue": -15, "consumable": true, "weight": 0.3},
 
     // Medical supplies
     "first aid kit": {"health": 30, "consumable": true, "weight": 1.0},
     "bandages": {"health": 15, "consumable": true, "weight": 0.3},
-    "pain medication": {"health": 10, "fatigue": -5, "consumable": true, "weight": 0.1},
+    "pain medication": {
+      "health": 10,
+      "fatigue": -5,
+      "consumable": true,
+      "weight": 0.1
+    },
     "antibiotics": {"health": 25, "consumable": true, "weight": 0.2},
 
     // Tools and equipment (not consumable)
@@ -122,7 +145,7 @@ class GameState {
 
   bool addItem(String item) {
     if (!canAddItem(item)) return false;
-    
+
     inventory.add(item);
     currentWeight += itemEffects[item]?['weight'] ?? 1.0;
     discoveredItems.add(item);
@@ -131,7 +154,7 @@ class GameState {
 
   bool removeItem(String item, [double? weight]) {
     if (!inventory.contains(item)) return false;
-    
+
     inventory.remove(item);
     currentWeight -= weight ?? itemEffects[item]?['weight'] ?? 1.0;
     currentWeight = max(0, currentWeight);
@@ -193,10 +216,7 @@ class GameState {
       resultMessages.add("Used $item");
     }
 
-    return {
-      "success": true,
-      "message": resultMessages.join(". ")
-    };
+    return {"success": true, "message": resultMessages.join(". ")};
   }
 
   bool moveToLocation(String location) {
@@ -253,10 +273,11 @@ Zombie Kills: $zombieKills
       health = max(0, health - 10);
       hunger = max(0, hunger - 15);
       thirst = max(0, thirst - 20);
-      
+
       return {
         "collapsed": true,
-        "message": "You collapse from exhaustion! You wake up hours later, weaker and more vulnerable."
+        "message":
+            "You collapse from exhaustion! You wake up hours later, weaker and more vulnerable."
       };
     }
     return {"collapsed": false};
@@ -315,7 +336,8 @@ Zombie Kills: $zombieKills
     gameIntroShown = json['gameIntroShown'] ?? false;
     storyFlags = Map<String, dynamic>.from(json['storyFlags'] ?? {});
     turnCount = json['turnCount'] ?? 0;
-    gameStartTime = DateTime.tryParse(json['gameStartTime'] ?? '') ?? DateTime.now();
+    gameStartTime =
+        DateTime.tryParse(json['gameStartTime'] ?? '') ?? DateTime.now();
     weapons = List<String>.from(json['weapons'] ?? []);
     armor = List<String>.from(json['armor'] ?? []);
     zombieKills = json['zombieKills'] ?? 0;
@@ -323,16 +345,19 @@ Zombie Kills: $zombieKills
     survivorRank = json['survivorRank'] ?? "Rookie";
     experiencePoints = json['experiencePoints'] ?? 0;
     skillPoints = json['skillPoints'] ?? 0;
-    skills = Map<String, int>.from(json['skills'] ?? {"combat": 0, "scavenging": 0, "crafting": 0, "survival": 0});
+    skills = Map<String, int>.from(json['skills'] ??
+        {"combat": 0, "scavenging": 0, "crafting": 0, "survival": 0});
     activeEvents = List<Map<String, dynamic>>.from(json['activeEvents'] ?? []);
     completedEvents = Set<String>.from(json['completedEvents'] ?? []);
     eventCooldown = json['eventCooldown'] ?? 0;
     currentVehicle = json['currentVehicle'];
     vehicleCondition = json['vehicleCondition']?.toDouble() ?? 0.0;
-    vehiclePartsCollected = List<String>.from(json['vehiclePartsCollected'] ?? []);
+    vehiclePartsCollected =
+        List<String>.from(json['vehiclePartsCollected'] ?? []);
     vehiclePartsInstalled = Map<String, Map<String, bool>>.from(
-      json['vehiclePartsInstalled']?.map((k, v) => MapEntry(k, Map<String, bool>.from(v))) ?? {}
-    );
+        json['vehiclePartsInstalled']
+                ?.map((k, v) => MapEntry(k, Map<String, bool>.from(v))) ??
+            {});
     townsVisited = List<String>.from(json['townsVisited'] ?? ["Riverside"]);
   }
 }

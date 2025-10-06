@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'screens/game_screen.dart';
 
 void main() {
@@ -18,8 +19,14 @@ class ZombieSurvivalApp extends StatelessWidget {
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white, fontFamily: 'monospace'),
           bodyMedium: TextStyle(color: Colors.white, fontFamily: 'monospace'),
-          headlineLarge: TextStyle(color: Colors.red, fontFamily: 'monospace', fontWeight: FontWeight.bold),
-          headlineMedium: TextStyle(color: Colors.red, fontFamily: 'monospace', fontWeight: FontWeight.bold),
+          headlineLarge: TextStyle(
+              color: Colors.red,
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.bold),
+          headlineMedium: TextStyle(
+              color: Colors.red,
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.bold),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(

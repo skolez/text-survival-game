@@ -61,10 +61,27 @@ class Zombie {
   }
 
   static Zombie createRandom() {
-    const types = ["walker", "runner", "brute", "crawler"];
     final random = Random();
-    final randomType = types[random.nextInt(types.length)];
-    return Zombie.create(randomType);
+    final roll = random.nextDouble();
+
+    // Weighted zombie type distribution:
+    // Crawler: 50% (0.0 - 0.5)
+    // Walker: 30% (0.5 - 0.8)
+    // Runner: 15% (0.8 - 0.95)
+    // Brute: 5% (0.95 - 1.0) - super rare
+
+    String zombieType;
+    if (roll < 0.5) {
+      zombieType = "crawler"; // Most common - slow moving crawlers
+    } else if (roll < 0.8) {
+      zombieType = "walker"; // Common - standard zombies
+    } else if (roll < 0.95) {
+      zombieType = "runner"; // Rare - fast zombies
+    } else {
+      zombieType = "brute"; // Super rare - massive zombies
+    }
+
+    return Zombie.create(zombieType);
   }
 
   void takeDamage(double damageAmount) {
@@ -77,14 +94,16 @@ class Zombie {
   Map<String, dynamic> attack() {
     final random = Random();
     final hitChance = 0.7; // 70% chance to hit
-    
+
     if (random.nextDouble() <= hitChance) {
       // Vary damage slightly
-      final actualDamage = damage + (random.nextInt(6) - 2); // ±2 damage variation
+      final actualDamage =
+          damage + (random.nextInt(6) - 2); // ±2 damage variation
       return {
         "hit": true,
         "damage": actualDamage.clamp(1.0, damage + 5),
-        "message": "The $description attacks you for ${actualDamage.toInt()} damage!"
+        "message":
+            "The $description attacks you for ${actualDamage.toInt()} damage!"
       };
     } else {
       return {

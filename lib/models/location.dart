@@ -58,8 +58,9 @@ class Location {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       actions: (json['actions'] as List<dynamic>?)
-          ?.map((action) => LocationAction.fromJson(action))
-          .toList() ?? [],
+              ?.map((action) => LocationAction.fromJson(action))
+              .toList() ??
+          [],
       town: json['town'],
       nearbyShort: List<String>.from(json['nearby_short'] ?? []),
       nearbyLong: List<String>.from(json['nearby_long'] ?? []),
@@ -95,7 +96,17 @@ class Location {
     return [...nearbyShort, ...nearbyLong];
   }
 
-  bool canTravelTo(String locationName) {
-    return getAllNearbyLocations().contains(locationName);
+  bool canTravelTo(String locationName, {bool hasWorkingVehicle = false}) {
+    // Check short-distance locations (always accessible)
+    if (nearbyShort.contains(locationName)) {
+      return true;
+    }
+
+    // Check long-distance locations (require vehicle)
+    if (nearbyLong.contains(locationName)) {
+      return hasWorkingVehicle;
+    }
+
+    return false;
   }
 }

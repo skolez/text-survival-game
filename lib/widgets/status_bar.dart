@@ -1,99 +1,86 @@
 import 'package:flutter/material.dart';
+
+import '../constants/app_theme.dart';
 import '../models/game_state.dart';
 
-class StatusBar extends StatelessWidget {
+class StatusBar extends StatefulWidget {
   final GameState gameState;
 
   const StatusBar({super.key, required this.gameState});
 
   @override
+  State<StatusBar> createState() => _StatusBarState();
+}
+
+class _StatusBarState extends State<StatusBar> {
+  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final maxWidth = screenWidth * 0.15; // Smaller: 15% max width
+
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: maxWidth,
+      ),
+      decoration: AppTheme.panelDecoration.copyWith(
+        color: AppTheme.backgroundColor.withOpacity(0.9),
+      ),
       padding: const EdgeInsets.all(8.0),
-      color: Colors.grey[900],
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              Expanded(child: _buildStatBar("Health", gameState.health, Colors.red)),
-              const SizedBox(width: 8),
-              Expanded(child: _buildStatBar("Hunger", gameState.hunger, Colors.orange)),
-            ],
+          // Left column - 3 stats
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildCompactStat("❤️", "Health", widget.gameState.health),
+                _buildCompactStat("🍖", "Hunger", widget.gameState.hunger),
+                _buildCompactStat("💧", "Thirst", widget.gameState.thirst),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(child: _buildStatBar("Thirst", gameState.thirst, Colors.blue)),
-              const SizedBox(width: 8),
-              Expanded(child: _buildStatBar("Fatigue", 100 - gameState.fatigue, Colors.green)),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(child: _buildStatBar("Fuel", gameState.fuel, Colors.purple)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    "Weight: ${gameState.currentWeight.toStringAsFixed(1)}/${gameState.maxInventoryWeight}kg",
-                    style: TextStyle(
-                      color: gameState.currentWeight > gameState.maxInventoryWeight * 0.8 
-                          ? Colors.red 
-                          : Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ],
+          const SizedBox(width: 8), // Reduced gap between columns
+          // Right column - 3 stats
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildCompactStat(
+                    "😴", "Energy", 100 - widget.gameState.fatigue),
+                _buildCompactStat("⛽", "Fuel", widget.gameState.fuel),
+                _buildCompactStat(
+                    "🎒",
+                    "Weight",
+                    ((widget.gameState.maxInventoryWeight -
+                            widget.gameState.currentWeight) /
+                        widget.gameState.maxInventoryWeight *
+                        100)),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatBar(String label, double value, Color color) {
-    final percentage = (value / 100.0).clamp(0.0, 1.0);
-    
-    // Determine color based on value
-    Color barColor = color;
-    if (percentage < 0.25) {
-      barColor = Colors.red;
-    } else if (percentage < 0.5) {
-      barColor = Colors.orange;
-    }
-    
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey[800],
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildCompactStat(String icon, String label, double value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
         children: [
-          Text(
-            "$label: ${value.toInt()}",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+          Text(icon, style: const TextStyle(fontSize: 12)),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              "${value.toInt()}%",
+              style: TextStyle(
+                color: AppTheme.getStatusColor(value),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 2),
-          LinearProgressIndicator(
-            value: percentage,
-            backgroundColor: Colors.grey[700],
-            valueColor: AlwaysStoppedAnimation<Color>(barColor),
-            minHeight: 6,
           ),
         ],
       ),
