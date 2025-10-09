@@ -7,11 +7,14 @@ import '../constants/app_theme.dart';
 import '../models/game_state.dart';
 import '../models/zombie.dart';
 import '../services/game_engine.dart';
+import '../utils/platform_utils.dart';
 import '../widgets/keyboard_dialog.dart';
 import '../widgets/status_bar.dart';
 import 'combat_screen.dart';
 import 'inventory_screen.dart';
 import 'save_load_screen.dart';
+import 'settings_screen.dart';
+import 'start_screen.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -117,18 +120,7 @@ class _GameScreenState extends State<GameScreen> {
     // Use WidgetsBinding to ensure this runs after the build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_showIntro) {
-        _addToLog("🧟 ZOMBIE SURVIVAL STORY 🧟");
-        _addToLog("=" * 40);
-        _addToLog(
-            "You and your friend Zack have been backpacking in the Wind River Mountain Range in Wyoming for a month.");
-        _addToLog(
-            "When you return to civilization, you discover that the world has changed - everyone is gone, replaced by hordes of zombies.");
-        _addToLog(
-            "Armed with your survival skills and whatever supplies you can find, you must navigate this dangerous new world.");
-        _addToLog("");
-        _addToLog(
-            "Your mission: Survive as long as possible and try to make it home, or explore this post-apocalyptic world to uncover what happened.");
-        _addToLog("");
+        // Intro outline removed from log; show only sticky header.
         _showIntro = false;
       }
 
@@ -154,13 +146,8 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _updateLocationDisplay() {
-    final location = _gameEngine.getCurrentLocation();
-    if (location != null) {
-      _addToLog("");
-      _addToLog("📍 ${location.name}");
-      _addToLog(location.description);
-      _addToLog("");
-    }
+    // Trigger rebuild so the sticky header reflects the current location
+    if (mounted) setState(() {});
   }
 
   void _handleAction(int actionIndex) async {
@@ -172,6 +159,8 @@ class _GameScreenState extends State<GameScreen> {
 
     // Update survival stats
     _gameEngine.gameState.updateSurvivalStats();
+    // Mark last significant action time
+    _gameEngine.gameState.lastActionTime = DateTime.now();
 
     // Check for fatigue collapse
     final collapseResult = _gameEngine.gameState.checkFatigueCollapse();
@@ -351,6 +340,28 @@ class _GameScreenState extends State<GameScreen> {
               _showHelp();
             },
           ),
+          DialogOption(
+            title: "Settings",
+            icon: Icons.settings,
+            iconColor: Colors.grey,
+            onTap: () async {
+              Navigator.pop(context);
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+              if (mounted) setState(() {});
+            },
+          ),
+          DialogOption(
+            title: "Go to Home Screen",
+            icon: Icons.home,
+            iconColor: Colors.teal,
+            onTap: () {
+              Navigator.pop(context);
+              _confirmUnsavedAndGoHome();
+            },
+          ),
         ],
       ),
     );
@@ -385,6 +396,7 @@ class _GameScreenState extends State<GameScreen> {
     );
 
     if (result == true) {
+      _gameEngine.gameState.lastSaveTime = DateTime.now();
       _addToLog("💾 Game saved successfully!");
     }
   }
@@ -407,6 +419,83 @@ class _GameScreenState extends State<GameScreen> {
       });
       _addToLog("📁 Game loaded successfully!");
       _updateLocationDisplay();
+    }
+  }
+
+  void _confirmUnsavedAndGoHome() async {
+    final gs = _gameEngine.gameState;
+    final now = DateTime.now();
+    final recentlySaved = gs.lastSaveTime != null &&
+        now.difference(gs.lastSaveTime!).inMinutes < 5;
+    final unsavedActions = gs.lastActionTime != null &&
+        (gs.lastSaveTime == null ||
+            gs.lastActionTime!.isAfter(gs.lastSaveTime!));
+
+    if (!recentlySaved && unsavedActions) {
+      final choice = await showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppTheme.backgroundColor,
+          title: Text('Unsaved Progress',
+              style: TextStyle(color: AppTheme.textColor)),
+          content: Text(
+            'You have unsaved progress. What would you like to do?',
+            style: TextStyle(color: AppTheme.textColor),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'cancel'),
+              child:
+                  Text('Cancel', style: TextStyle(color: AppTheme.textColor)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'quit'),
+              child: Text('Quit Without Saving',
+                  style: TextStyle(color: Colors.red)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'save_quit'),
+              child: Text('Save and Quit',
+                  style: TextStyle(color: AppTheme.primaryColor)),
+            ),
+          ],
+        ),
+      );
+
+      if (choice == 'save_quit') {
+        final result = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SaveLoadScreen(
+              gameState: _gameEngine.gameState,
+              isSaving: true,
+            ),
+          ),
+        );
+        if (result == true) {
+          _gameEngine.gameState.lastSaveTime = DateTime.now();
+          if (!mounted) return;
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const StartScreen()),
+            (route) => false,
+          );
+        }
+      } else if (choice == 'quit') {
+        if (!mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const StartScreen()),
+          (route) => false,
+        );
+      }
+    } else {
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const StartScreen()),
+        (route) => false,
+      );
     }
   }
 
@@ -482,82 +571,118 @@ class _GameScreenState extends State<GameScreen> {
     final actions = location.actions;
 
     if (actions.isEmpty) {
-      return const Text(
+      return Text(
         "No actions available",
-        style: TextStyle(color: Colors.white70, fontSize: 11),
+        style: TextStyle(
+            color: AppTheme.textColor.withValues(alpha: 0.7),
+            fontSize: PlatformUtils.getResponsiveFontSize(context, 11)),
       );
     }
 
-    return Center(
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 6.0, // Horizontal spacing between buttons
-        runSpacing: 4.0, // Vertical spacing between rows
-        children: actions.asMap().entries.map<Widget>((entry) {
-          final index = entry.key;
-          final action = entry.value;
-          return _buildCompactActionButton(
-            text: action.name,
-            number: index + 1,
-            onPressed: () => _handleAction(index),
-          );
-        }).toList(),
-      ),
+    // Get responsive grid configuration
+    final breakpoint = PlatformUtils.getBreakpoint(context);
+
+    // Calculate responsive spacing
+    double spacing = breakpoint == ResponsiveBreakpoint.mobile ? 4.0 : 6.0;
+    double runSpacing = breakpoint == ResponsiveBreakpoint.mobile ? 3.0 : 4.0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: constraints.maxWidth,
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: spacing,
+              runSpacing: runSpacing,
+              children: actions.asMap().entries.map<Widget>((entry) {
+                final index = entry.key;
+                final action = entry.value;
+                return _buildResponsiveActionButton(
+                  text: action.name,
+                  number: index + 1,
+                  onPressed: () => _handleAction(index),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildCompactActionButton({
+  Widget _buildResponsiveActionButton({
     required String text,
     required int number,
     required VoidCallback onPressed,
   }) {
-    // Truncate long action names
-    String actionName = text;
-    if (actionName.length > 12) {
-      actionName = '${actionName.substring(0, 9)}...';
-    }
+    final breakpoint = PlatformUtils.getBreakpoint(context);
+    final showNumpadShortcuts =
+        PlatformUtils.shouldShowNumpadShortcuts(context);
 
-    return SizedBox(
-      width: 70, // Fixed small width
-      height: 40, // Fixed small height
+    // Get responsive sizing
+    double buttonWidth = breakpoint == ResponsiveBreakpoint.mobile ? 60 : 70;
+    double buttonHeight = breakpoint == ResponsiveBreakpoint.mobile ? 35 : 40;
+    double fontSize = PlatformUtils.getResponsiveFontSize(context, 8);
+
+    // Use full action name; allow wrapping inside the button
+    String actionName = text;
+
+    return ConstrainedBox(
+      constraints:
+          BoxConstraints(minHeight: buttonHeight, minWidth: buttonWidth),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.backgroundColor,
           foregroundColor: AppTheme.textColor,
-          side: const BorderSide(
+          side: BorderSide(
               color: AppTheme.borderColor, width: AppTheme.borderWidth),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
           elevation: AppTheme.elevation,
-          padding: const EdgeInsets.all(2),
+          padding:
+              EdgeInsets.all(breakpoint == ResponsiveBreakpoint.mobile ? 1 : 2),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            // Number badge
-            Container(
-              width: 16,
-              height: 16,
-              decoration: AppTheme.numberCircleDecoration,
-              child: Center(
-                child: Text(
-                  number.toString(),
-                  style: AppTheme.smallTextStyle,
+            if (showNumpadShortcuts)
+              Positioned(
+                top: 2,
+                right: 2,
+                child: Container(
+                  width: breakpoint == ResponsiveBreakpoint.mobile ? 14 : 16,
+                  height: breakpoint == ResponsiveBreakpoint.mobile ? 14 : 16,
+                  decoration: AppTheme.numberCircleDecoration,
+                  child: Center(
+                    child: Text(
+                      number.toString(),
+                      style: TextStyle(
+                        color: AppTheme.textColor,
+                        fontSize: fontSize * 0.9,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 2),
-            // Action name
-            Expanded(
-              child: Text(
-                actionName,
-                style: AppTheme.smallTextStyle.copyWith(fontSize: 8),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+            Center(
+              child: SizedBox(
+                width: buttonWidth - 4,
+                child: Text(
+                  actionName,
+                  style: TextStyle(
+                    color: AppTheme.textColor,
+                    fontSize: fontSize,
+                    fontFamily: 'monospace',
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: breakpoint == ResponsiveBreakpoint.mobile ? 3 : 2,
+                  softWrap: true,
+                ),
               ),
             ),
           ],
@@ -599,52 +724,89 @@ class _GameScreenState extends State<GameScreen> {
         ),
         body: Stack(
           children: [
-            // Main content area
-            Column(
-              children: [
-                // Game log (maximized space)
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: _gameLog.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2.0),
-                          child: Text(
-                            _gameLog[index],
+            // Main content area - wrap in Positioned.fill to provide bounded constraints
+            Positioned.fill(
+              child: Column(
+                children: [
+                  // Sticky header with current location
+                  if (location != null)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.surfaceColor,
+                        border: Border(
+                          bottom:
+                              BorderSide(color: AppTheme.borderColor, width: 1),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '📍 ${location.name}',
+                            style: TextStyle(
+                              color: AppTheme.textColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: PlatformUtils.getResponsiveFontSize(
+                                  context, 12),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            location.description,
                             style: AppTheme.narrativeTextStyle,
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
-                  ),
-                ),
 
-                // Compact action buttons - centered at bottom
-                if (location != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    child: Column(
-                      children: [
-                        const Divider(color: Colors.grey),
-                        Text(
-                          "Actions (Press 1-${location.actions.length} or 0 for menu)",
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 6),
-                        _buildCompactActionRow(location),
-                      ],
+                  // Game log (maximized space)
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: _gameLog.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
+                            child: Text(
+                              _gameLog[index],
+                              style: AppTheme.narrativeTextStyle,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-              ],
+
+                  // Compact action buttons - centered at bottom
+                  if (location != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Column(
+                        children: [
+                          const Divider(color: Colors.grey),
+                          Text(
+                            "Actions (Press 1-${location.actions.length} or 0 for menu)",
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 6),
+                          // Actions grid
+                          _buildCompactActionRow(location),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             ),
 
             // Status bar positioned in bottom-right corner

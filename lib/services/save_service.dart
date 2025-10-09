@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../models/game_state.dart';
 
 class SaveService {
@@ -12,29 +12,20 @@ class SaveService {
   static const String _savePrefix = 'zombie_save_';
   static const String _saveListKey = 'save_list';
 
-  Future<String> _getSaveDirectory() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final saveDir = Directory('${directory.path}/zombie_survival_saves');
-    if (!await saveDir.exists()) {
-      await saveDir.create(recursive: true);
-    }
-    return saveDir.path;
-  }
-
   Future<bool> saveGame(GameState gameState, String saveName) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final saveData = gameState.toJson();
       saveData['saveName'] = saveName;
       saveData['saveTime'] = DateTime.now().toIso8601String();
-      
+
       final saveKey = '$_savePrefix$saveName';
       final success = await prefs.setString(saveKey, json.encode(saveData));
-      
+
       if (success) {
         await _updateSaveList(saveName);
       }
-      
+
       return success;
     } catch (e) {
       print('Error saving game: $e');
@@ -47,13 +38,13 @@ class SaveService {
       final prefs = await SharedPreferences.getInstance();
       final saveKey = '$_savePrefix$saveName';
       final saveDataString = prefs.getString(saveKey);
-      
+
       if (saveDataString == null) return null;
-      
+
       final saveData = json.decode(saveDataString);
       final gameState = GameState();
       gameState.fromJson(saveData);
-      
+
       return gameState;
     } catch (e) {
       print('Error loading game: $e');
@@ -66,11 +57,11 @@ class SaveService {
       final prefs = await SharedPreferences.getInstance();
       final saveNames = prefs.getStringList(_saveListKey) ?? [];
       final saveInfoList = <SaveInfo>[];
-      
+
       for (final saveName in saveNames) {
         final saveKey = '$_savePrefix$saveName';
         final saveDataString = prefs.getString(saveKey);
-        
+
         if (saveDataString != null) {
           try {
             final saveData = json.decode(saveDataString);
@@ -80,10 +71,10 @@ class SaveService {
           }
         }
       }
-      
+
       // Sort by save time, newest first
       saveInfoList.sort((a, b) => b.saveTime.compareTo(a.saveTime));
-      
+
       return saveInfoList;
     } catch (e) {
       print('Error getting save list: $e');
@@ -96,11 +87,11 @@ class SaveService {
       final prefs = await SharedPreferences.getInstance();
       final saveKey = '$_savePrefix$saveName';
       final success = await prefs.remove(saveKey);
-      
+
       if (success) {
         await _removeSaveFromList(saveName);
       }
-      
+
       return success;
     } catch (e) {
       print('Error deleting save: $e');
@@ -111,7 +102,7 @@ class SaveService {
   Future<void> _updateSaveList(String saveName) async {
     final prefs = await SharedPreferences.getInstance();
     final saveNames = prefs.getStringList(_saveListKey) ?? [];
-    
+
     if (!saveNames.contains(saveName)) {
       saveNames.add(saveName);
       await prefs.setStringList(_saveListKey, saveNames);
@@ -121,7 +112,7 @@ class SaveService {
   Future<void> _removeSaveFromList(String saveName) async {
     final prefs = await SharedPreferences.getInstance();
     final saveNames = prefs.getStringList(_saveListKey) ?? [];
-    
+
     saveNames.remove(saveName);
     await prefs.setStringList(_saveListKey, saveNames);
   }
@@ -130,6 +121,37 @@ class SaveService {
     final prefs = await SharedPreferences.getInstance();
     final saveKey = '$_savePrefix$saveName';
     return prefs.containsKey(saveKey);
+  }
+
+  /// Check if there's any save game available
+  static Future<bool> hasSaveGame() async {
+    try {
+      final saveService = SaveService.instance;
+      final saveList = await saveService.getSaveList();
+      return saveList.isNotEmpty;
+    } catch (e) {
+      print('Error checking for save game: $e');
+      return false;
+    }
+  }
+
+  /// Load the most recent save game
+  static Future<GameState?> loadMostRecentGame() async {
+    try {
+      final saveService = SaveService.instance;
+      final saveList = await saveService.getSaveList();
+
+      if (saveList.isEmpty) {
+        return null;
+      }
+
+      // Get the most recent save (list is already sorted by save time)
+      final mostRecentSave = saveList.first;
+      return await saveService.loadGame(mostRecentSave.saveName);
+    } catch (e) {
+      print('Error loading most recent game: $e');
+      return null;
+    }
   }
 }
 

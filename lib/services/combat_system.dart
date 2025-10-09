@@ -128,6 +128,17 @@ class CombatSystem {
     double baseDamage = weaponInfo["damage"];
     double actualDamage =
         baseDamage + (random.nextInt(6) - 2); // ±2 damage variation
+    // Apply difficulty-based player damage multiplier
+    switch (gameState.difficulty) {
+      case Difficulty.easy:
+        actualDamage *= 1.5;
+        break;
+      case Difficulty.hard:
+        actualDamage *= 0.7;
+        break;
+      case Difficulty.medium:
+        break;
+    }
     actualDamage = actualDamage.clamp(1.0, baseDamage + 5);
 
     // Apply damage to zombie

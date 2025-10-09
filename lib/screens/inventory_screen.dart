@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../constants/app_theme.dart';
 import '../models/game_state.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -12,26 +14,63 @@ class InventoryScreen extends StatefulWidget {
 
 class _InventoryScreenState extends State<InventoryScreen> {
   String _selectedCategory = 'All';
-  
+
   final Map<String, List<String>> _categories = {
     'All': [],
-    'Weapons': ['hunting knife', 'baseball bat', 'pistol', 'hunting rifle', 'shotgun', 'crowbar', 'tire iron'],
+    'Weapons': [
+      'hunting knife',
+      'baseball bat',
+      'pistol',
+      'hunting rifle',
+      'shotgun',
+      'crowbar',
+      'tire iron'
+    ],
     'Medical': ['first aid kit', 'bandages', 'pain medication', 'antibiotics'],
-    'Food': ['canned food', 'energy bar', 'beef jerky', 'crackers', 'chocolate'],
+    'Food': [
+      'canned food',
+      'energy bar',
+      'beef jerky',
+      'crackers',
+      'chocolate'
+    ],
     'Drinks': ['water bottle', 'energy drink', 'soda', 'coffee'],
-    'Tools': ['flashlight', 'rope', 'crowbar', 'tire iron', 'wrench', 'screwdriver', 'hammer', 'duct tape'],
-    'Vehicle Parts': ['car battery', 'spark plugs', 'motor oil', 'tire', 'fuel filter'],
+    'Tools': [
+      'flashlight',
+      'rope',
+      'crowbar',
+      'tire iron',
+      'wrench',
+      'screwdriver',
+      'hammer',
+      'duct tape'
+    ],
+    'Vehicle Parts': [
+      'car battery',
+      'spark plugs',
+      'motor oil',
+      'tire',
+      'fuel filter'
+    ],
     'Ammunition': ['bullets', 'rifle_rounds', 'shells'],
-    'Miscellaneous': ['road map', 'compass', 'binoculars', 'camping backpack', 'sleeping bag'],
+    'Miscellaneous': [
+      'road map',
+      'compass',
+      'binoculars',
+      'camping backpack',
+      'sleeping bag'
+    ],
   };
 
   List<String> _getFilteredInventory() {
     if (_selectedCategory == 'All') {
       return widget.gameState.inventory;
     }
-    
+
     final categoryItems = _categories[_selectedCategory] ?? [];
-    return widget.gameState.inventory.where((item) => categoryItems.contains(item)).toList();
+    return widget.gameState.inventory
+        .where((item) => categoryItems.contains(item))
+        .toList();
   }
 
   String _getItemCategory(String item) {
@@ -45,67 +84,80 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   void _useItem(String item) {
     final result = widget.gameState.useItem(item);
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: AppTheme.backgroundColor,
         title: Text(
           result["success"] ? "Item Used" : "Cannot Use Item",
           style: TextStyle(
-            color: result["success"] ? Colors.green : Colors.red,
+            color: result["success"] ? AppTheme.primaryColor : Colors.red,
           ),
         ),
         content: Text(
           result["message"],
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: AppTheme.textColor),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("OK", style: TextStyle(color: Colors.white)),
+            child: Text("OK", style: TextStyle(color: AppTheme.textColor)),
           ),
         ],
       ),
     );
-    
+
     setState(() {}); // Refresh the inventory display
   }
 
   void _showItemDetails(String item) {
     final itemInfo = GameState.itemEffects[item];
     final category = _getItemCategory(item);
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: Text(item, style: const TextStyle(color: Colors.white)),
+        backgroundColor: AppTheme.backgroundColor,
+        title: Text(item, style: TextStyle(color: AppTheme.textColor)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Category: $category", style: const TextStyle(color: Colors.grey)),
+            Text("Category: $category",
+                style: TextStyle(
+                    color: AppTheme.textColor.withValues(alpha: 0.7))),
             const SizedBox(height: 8),
             if (itemInfo != null) ...[
-              Text("Weight: ${itemInfo['weight']} kg", style: const TextStyle(color: Colors.white)),
+              Text("Weight: ${itemInfo['weight']} kg",
+                  style: TextStyle(color: AppTheme.textColor)),
               if (itemInfo['consumable'] == true) ...[
                 const SizedBox(height: 8),
-                const Text("Effects when used:", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                Text("Effects when used:",
+                    style: TextStyle(
+                        color: AppTheme.primaryColor,
+                        fontWeight: FontWeight.bold)),
                 if (itemInfo['health'] != null)
-                  Text("Health: +${itemInfo['health']}", style: const TextStyle(color: Colors.green)),
+                  Text("Health: +${itemInfo['health']}",
+                      style: TextStyle(color: AppTheme.primaryColor)),
                 if (itemInfo['hunger'] != null)
-                  Text("Hunger: +${itemInfo['hunger']}", style: const TextStyle(color: Colors.green)),
+                  Text("Hunger: +${itemInfo['hunger']}",
+                      style: TextStyle(color: AppTheme.primaryColor)),
                 if (itemInfo['thirst'] != null)
-                  Text("Thirst: +${itemInfo['thirst']}", style: const TextStyle(color: Colors.green)),
+                  Text("Thirst: +${itemInfo['thirst']}",
+                      style: TextStyle(color: AppTheme.primaryColor)),
                 if (itemInfo['fatigue'] != null)
-                  Text("Fatigue: ${itemInfo['fatigue']}", style: const TextStyle(color: Colors.green)),
+                  Text("Fatigue: ${itemInfo['fatigue']}",
+                      style: TextStyle(color: AppTheme.primaryColor)),
               ] else ...[
                 const SizedBox(height: 8),
-                const Text("This item cannot be consumed.", style: TextStyle(color: Colors.orange)),
+                const Text("This item cannot be consumed.",
+                    style: TextStyle(color: Colors.orange)),
               ],
             ] else ...[
-              const Text("No additional information available.", style: TextStyle(color: Colors.grey)),
+              Text("No additional information available.",
+                  style: TextStyle(
+                      color: AppTheme.textColor.withValues(alpha: 0.7))),
             ],
           ],
         ),
@@ -116,11 +168,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 Navigator.pop(context);
                 _useItem(item);
               },
-              child: const Text("Use Item", style: TextStyle(color: Colors.green)),
+              child: Text("Use Item",
+                  style: TextStyle(color: AppTheme.primaryColor)),
             ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Close", style: TextStyle(color: Colors.white)),
+            child: Text("Close", style: TextStyle(color: AppTheme.textColor)),
           ),
         ],
       ),
@@ -130,14 +183,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredInventory = _getFilteredInventory();
-    
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.blue[800],
-        title: const Text("Inventory", style: TextStyle(color: Colors.white)),
+        backgroundColor: AppTheme.backgroundColor,
+        foregroundColor: AppTheme.textColor,
+        title: Text("Inventory", style: TextStyle(color: AppTheme.textColor)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppTheme.textColor),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -146,7 +200,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           // Inventory summary
           Container(
             padding: const EdgeInsets.all(16.0),
-            color: Colors.grey[900],
+            decoration: AppTheme.panelDecoration,
             child: Column(
               children: [
                 Row(
@@ -154,14 +208,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   children: [
                     Text(
                       "Items: ${widget.gameState.inventory.length}",
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: AppTheme.textColor, fontSize: 16),
                     ),
                     Text(
                       "Weight: ${widget.gameState.currentWeight.toStringAsFixed(1)}/${widget.gameState.maxInventoryWeight} kg",
                       style: TextStyle(
-                        color: widget.gameState.currentWeight > widget.gameState.maxInventoryWeight * 0.8 
-                            ? Colors.red 
-                            : Colors.white,
+                        color: widget.gameState.currentWeight >
+                                widget.gameState.maxInventoryWeight * 0.8
+                            ? Colors.red
+                            : AppTheme.textColor,
                         fontSize: 16,
                       ),
                     ),
@@ -170,18 +225,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 const SizedBox(height: 8),
                 // Weight bar
                 LinearProgressIndicator(
-                  value: widget.gameState.currentWeight / widget.gameState.maxInventoryWeight,
-                  backgroundColor: Colors.grey[700],
+                  value: widget.gameState.currentWeight /
+                      widget.gameState.maxInventoryWeight,
+                  backgroundColor: AppTheme.surfaceColor,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    widget.gameState.currentWeight > widget.gameState.maxInventoryWeight * 0.8 
-                        ? Colors.red 
-                        : Colors.blue,
+                    widget.gameState.currentWeight >
+                            widget.gameState.maxInventoryWeight * 0.8
+                        ? Colors.red
+                        : AppTheme.primaryColor,
                   ),
                 ),
               ],
             ),
           ),
-          
+
           // Category filter
           Container(
             height: 50,
@@ -192,7 +249,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               itemBuilder: (context, index) {
                 final category = _categories.keys.elementAt(index);
                 final isSelected = category == _selectedCategory;
-                
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: FilterChip(
@@ -203,17 +260,19 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         _selectedCategory = category;
                       });
                     },
-                    selectedColor: Colors.blue[700],
-                    backgroundColor: Colors.grey[800],
+                    selectedColor: AppTheme.surfaceColor,
+                    backgroundColor: AppTheme.surfaceColor,
                     labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : Colors.grey[300],
+                      color: isSelected
+                          ? AppTheme.textColor
+                          : AppTheme.textColor.withValues(alpha: 0.7),
                     ),
                   ),
                 );
               },
             ),
           ),
-          
+
           // Inventory list
           Expanded(
             child: filteredInventory.isEmpty
@@ -230,15 +289,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       final itemInfo = GameState.itemEffects[item];
                       final isUsable = itemInfo?['consumable'] == true;
                       final weight = itemInfo?['weight']?.toString() ?? '?';
-                      
+
                       return Card(
-                        color: Colors.grey[850],
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        color: AppTheme.cardColor,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
                         child: ListTile(
                           title: Text(
                             item,
                             style: TextStyle(
-                              color: isUsable ? Colors.green : Colors.white,
+                              color: isUsable
+                                  ? AppTheme.primaryColor
+                                  : AppTheme.textColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -247,11 +309,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             children: [
                               Text(
                                 "Category: ${_getItemCategory(item)}",
-                                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                style: TextStyle(
+                                    color: AppTheme.textColor
+                                        .withValues(alpha: 0.7),
+                                    fontSize: 12),
                               ),
                               Text(
                                 "Weight: ${weight} kg",
-                                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                style: TextStyle(
+                                    color: AppTheme.textColor
+                                        .withValues(alpha: 0.7),
+                                    fontSize: 12),
                               ),
                             ],
                           ),
@@ -260,12 +328,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             children: [
                               if (isUsable)
                                 IconButton(
-                                  icon: const Icon(Icons.play_arrow, color: Colors.green),
+                                  icon: Icon(Icons.play_arrow,
+                                      color: AppTheme.primaryColor),
                                   onPressed: () => _useItem(item),
                                   tooltip: "Use Item",
                                 ),
                               IconButton(
-                                icon: const Icon(Icons.info_outline, color: Colors.blue),
+                                icon: Icon(Icons.info_outline,
+                                    color: AppTheme.primaryColor),
                                 onPressed: () => _showItemDetails(item),
                                 tooltip: "Item Details",
                               ),

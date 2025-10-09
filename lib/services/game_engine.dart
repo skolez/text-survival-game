@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../models/game_state.dart';
 import '../models/location.dart';
 import '../models/zombie.dart';
@@ -18,6 +20,23 @@ class GameEngine {
   Future<void> initialize() async {
     try {
       locations = await LocationService.instance.loadLocations();
+      // Load persisted difficulty (if any)
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final diff = prefs.getString('difficulty');
+        if (diff != null) {
+          switch (diff) {
+            case 'easy':
+              gameState.difficulty = Difficulty.easy;
+              break;
+            case 'hard':
+              gameState.difficulty = Difficulty.hard;
+              break;
+            default:
+              gameState.difficulty = Difficulty.medium;
+          }
+        }
+      } catch (_) {}
     } catch (e) {
       print('Error loading locations: $e');
       rethrow;
@@ -98,9 +117,11 @@ class GameEngine {
   Map<String, dynamic> _lookAround(Location location) {
     final random = Random();
 
-    // Check for zombie encounter
-    if (random.nextDouble() <= location.zombieChance) {
-      final zombie = Zombie.createRandom();
+    // Check for zombie encounter (apply difficulty spawn multiplier)
+    final adjustedChance =
+        (location.zombieChance * _spawnMultiplier()).clamp(0.0, 1.0);
+    if (random.nextDouble() <= adjustedChance) {
+      final zombie = _applyDifficultyToZombie(Zombie.createRandom());
       return {
         "success": true,
         "message": "While looking around, you encounter a zombie!",
@@ -529,12 +550,55 @@ class GameEngine {
     return true;
   }
 
+  double _spawnMultiplier() {
+    switch (gameState.difficulty) {
+      case Difficulty.easy:
+        return 0.5;
+      case Difficulty.hard:
+        return 1.5;
+      case Difficulty.medium:
+        return 1.0;
+    }
+  }
+
+  Zombie _applyDifficultyToZombie(Zombie z) {
+    switch (gameState.difficulty) {
+      case Difficulty.easy:
+        // Scale down both current and max health
+        return Zombie(
+          type: z.type,
+          health: (z.health * 0.5).clamp(1.0, double.infinity),
+          maxHealth: (z.maxHealth * 0.5).clamp(1.0, double.infinity),
+          damage: z.damage,
+          speed: z.speed,
+          description: z.description,
+          isAlive: z.isAlive,
+        );
+      case Difficulty.hard:
+        return Zombie(
+          type: z.type,
+          health: z.health * 1.5,
+          maxHealth: z.maxHealth * 1.5,
+          damage: z.damage,
+          speed: z.speed,
+          description: z.description,
+          isAlive: z.isAlive,
+        );
+      case Difficulty.medium:
+        return z;
+    }
+  }
+
   Zombie? checkForRandomEncounter() {
     final location = getCurrentLocation();
     if (location == null) return null;
 
-    return CombatSystem.instance
-        .checkForZombieEncounter(location.name, location.zombieChance);
+    final adjustedChance =
+        (location.zombieChance * _spawnMultiplier()).clamp(0.0, 1.0);
+    final z = CombatSystem.instance
+        .checkForZombieEncounter(location.name, adjustedChance);
+    if (z == null) return null;
+    return _applyDifficultyToZombie(z);
   }
 
   bool isGameOver() {

@@ -16,21 +16,23 @@ class _StatusBarState extends State<StatusBar> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final maxWidth = screenWidth * 0.15; // Smaller: 15% max width
+    final maxWidth = screenWidth * 0.12; // Slightly smaller: 12% max width
 
     return Container(
-      constraints: BoxConstraints(
-        maxWidth: maxWidth,
-      ),
+      width: maxWidth,
       decoration: AppTheme.panelDecoration.copyWith(
-        color: AppTheme.backgroundColor.withOpacity(0.9),
+        color: AppTheme.backgroundColor.withValues(alpha: 0.9),
       ),
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          // Left column - 3 stats
-          Expanded(
-            child: Column(
+      padding: const EdgeInsets.all(6.0),
+      child: FittedBox(
+        alignment: Alignment.topLeft,
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left column - 3 stats
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -39,11 +41,9 @@ class _StatusBarState extends State<StatusBar> {
                 _buildCompactStat("💧", "Thirst", widget.gameState.thirst),
               ],
             ),
-          ),
-          const SizedBox(width: 8), // Reduced gap between columns
-          // Right column - 3 stats
-          Expanded(
-            child: Column(
+            const SizedBox(width: 10),
+            // Right column - 3 stats
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -59,8 +59,8 @@ class _StatusBarState extends State<StatusBar> {
                         100)),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -70,16 +70,14 @@ class _StatusBarState extends State<StatusBar> {
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         children: [
-          Text(icon, style: const TextStyle(fontSize: 12)),
+          Text(icon, style: const TextStyle(fontSize: 11)),
           const SizedBox(width: 4),
-          Expanded(
-            child: Text(
-              "${value.toInt()}%",
-              style: TextStyle(
-                color: AppTheme.getStatusColor(value),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
+          Text(
+            "${value.toInt()}%",
+            style: TextStyle(
+              color: AppTheme.getStatusColor(value),
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

@@ -243,9 +243,10 @@ class _CombatScreenState extends State<CombatScreen> {
           title: Text("Combat", style: AppTheme.appBarTheme.titleTextStyle),
           shape: AppTheme.appBarTheme.shape,
           elevation: AppTheme.elevation,
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
         ),
         body: Stack(
+          fit: StackFit.expand,
           children: [
             Column(
               children: [
@@ -362,7 +363,7 @@ class _CombatScreenState extends State<CombatScreen> {
                                   ? ElevatedButton.styleFrom(
                                       backgroundColor: AppTheme.backgroundColor,
                                       foregroundColor: AppTheme.textColor,
-                                      side: const BorderSide(
+                                      side: BorderSide(
                                           color: AppTheme.borderColor,
                                           width: AppTheme.borderWidth),
                                       shape: RoundedRectangleBorder(
@@ -374,7 +375,7 @@ class _CombatScreenState extends State<CombatScreen> {
                                   : ElevatedButton.styleFrom(
                                       backgroundColor: Colors.grey[800],
                                       foregroundColor: Colors.grey[400],
-                                      side: const BorderSide(
+                                      side: BorderSide(
                                           color: Colors.grey,
                                           width: AppTheme.borderWidth),
                                       shape: RoundedRectangleBorder(
@@ -391,7 +392,7 @@ class _CombatScreenState extends State<CombatScreen> {
                                     height: 20,
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF00FF41)
-                                          .withOpacity(0.2),
+                                          .withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
                                           color: const Color(0xFF00FF41),
@@ -429,7 +430,7 @@ class _CombatScreenState extends State<CombatScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.backgroundColor,
                                 foregroundColor: AppTheme.textColor,
-                                side: const BorderSide(
+                                side: BorderSide(
                                     color: AppTheme.borderColor,
                                     width: AppTheme.borderWidth),
                                 shape: RoundedRectangleBorder(
@@ -446,7 +447,7 @@ class _CombatScreenState extends State<CombatScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.backgroundColor,
                                 foregroundColor: AppTheme.textColor,
-                                side: const BorderSide(
+                                side: BorderSide(
                                     color: AppTheme.borderColor,
                                     width: AppTheme.borderWidth),
                                 shape: RoundedRectangleBorder(
@@ -480,9 +481,9 @@ class _CombatScreenState extends State<CombatScreen> {
               bottom: 16,
               right: 16,
               child: Container(
-                constraints: const BoxConstraints(maxWidth: 200),
+                width: 200,
                 decoration: AppTheme.panelDecoration.copyWith(
-                  color: AppTheme.backgroundColor.withOpacity(0.9),
+                  color: AppTheme.backgroundColor.withValues(alpha: 0.9),
                 ),
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -533,14 +534,12 @@ class _CombatScreenState extends State<CombatScreen> {
         children: [
           Text(icon, style: const TextStyle(fontSize: 12)),
           const SizedBox(width: 4),
-          Expanded(
-            child: Text(
-              "${value.toInt()}%",
-              style: TextStyle(
-                color: AppTheme.getStatusColor(value),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
+          Text(
+            "${value.toInt()}%",
+            style: TextStyle(
+              color: AppTheme.getStatusColor(value),
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -566,7 +565,7 @@ class _CombatScreenState extends State<CombatScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.red.withOpacity(0.3),
+            color: Colors.red.withValues(alpha: 0.3),
             blurRadius: 10,
             spreadRadius: 2,
           ),

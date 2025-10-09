@@ -1,5 +1,7 @@
 import 'dart:math';
 
+enum Difficulty { easy, medium, hard }
+
 class GameState {
   // Player stats
   double health = 100.0;
@@ -29,6 +31,13 @@ class GameState {
   List<String> weapons = [];
   List<String> armor = [];
   int zombieKills = 0;
+  // Meta and session timing
+  DateTime? lastSaveTime;
+  DateTime? lastActionTime;
+
+  // Difficulty
+  Difficulty difficulty = Difficulty.medium;
+
   int daysSurvived = 0;
 
   // Progression system
@@ -317,6 +326,9 @@ Zombie Kills: $zombieKills
       'vehiclePartsCollected': vehiclePartsCollected,
       'vehiclePartsInstalled': vehiclePartsInstalled,
       'townsVisited': townsVisited,
+      'difficulty': difficulty.name,
+      'lastSaveTime': lastSaveTime?.toIso8601String(),
+      'lastActionTime': lastActionTime?.toIso8601String(),
     };
   }
 
@@ -359,5 +371,26 @@ Zombie Kills: $zombieKills
                 ?.map((k, v) => MapEntry(k, Map<String, bool>.from(v))) ??
             {});
     townsVisited = List<String>.from(json['townsVisited'] ?? ["Riverside"]);
+
+    // Difficulty
+    final difficultyStr = (json['difficulty'] ?? 'medium') as String;
+    switch (difficultyStr) {
+      case 'easy':
+        difficulty = Difficulty.easy;
+        break;
+      case 'hard':
+        difficulty = Difficulty.hard;
+        break;
+      default:
+        difficulty = Difficulty.medium;
+    }
+
+    // Timestamps
+    lastSaveTime = json['lastSaveTime'] != null
+        ? DateTime.tryParse(json['lastSaveTime'])
+        : null;
+    lastActionTime = json['lastActionTime'] != null
+        ? DateTime.tryParse(json['lastActionTime'])
+        : null;
   }
 }

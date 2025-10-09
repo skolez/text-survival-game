@@ -100,7 +100,7 @@ class _KeyboardDialogState extends State<KeyboardDialog> {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.white, width: 1),
                       ),
