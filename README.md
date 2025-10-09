@@ -1,259 +1,222 @@
-# 🧟 Zombie Survival Story - Flutter Edition
+# 🧟 Zombie Survival Story (Flutter)
 
-A comprehensive text-based zombie survival adventure game built with Flutter/Dart. Survive the apocalypse, manage resources, fight zombies, and explore a detailed world as you try to make it home.
-
-## 📖 Story
-
-You and your friend Zack have been backpacking in the Wind River Mountain Range in Wyoming for a month. When you return to civilization, you discover that the world has changed - everyone is gone, replaced by hordes of zombies. Armed with your survival skills and whatever supplies you can find, you must navigate this dangerous new world.
-
-Your mission: Survive as long as possible and try to make it home, or explore this post-apocalyptic world to uncover what happened.
-
-## ✨ Features
-
-### 🎮 Core Gameplay
-- **Rich Location System**: Explore 10+ detailed locations including gas stations, hospitals, police stations, and wilderness areas
-- **Dynamic Combat**: Fight different types of zombies with various weapons and tactics
-- **Resource Management**: Monitor health, hunger, thirst, fatigue, and fuel levels
-- **Inventory System**: Categorized inventory with weight limits and item usage
-- **Save/Load System**: Multiple save slots with detailed save information
-
-### 🧟 Survival Mechanics
-- **Zombie Encounters**: Random encounters with different zombie types (walkers, runners, brutes, crawlers)
-- **Weapon System**: Use melee weapons, firearms, and improvised weapons
-- **Health & Status**: Manage multiple survival stats that affect gameplay
-- **Rest & Recovery**: Find safe locations to rest and recover
-- **Fuel Management**: Keep vehicles fueled for faster travel
-
-### 🎯 Advanced Features
-- **Location-Based Actions**: Different actions available at different locations
-- **Item Categories**: Weapons, medical supplies, food, tools, and more
-- **Visual Status Bars**: Color-coded health and resource indicators
-- **Comprehensive Help System**: Built-in help and command reference
-- **Error Handling**: Robust error handling and input validation
-
-## 🚀 Installation & Setup
-
-### Prerequisites
-- Python 3.8 or higher
-- pip (Python package installer)
-
-### Quick Start
-1. **Clone or download the game files**
-   ```bash
-   git clone <repository-url>
-   cd text-adventure-game
-   ```
-
-2. **Install dependencies (optional, for testing)**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the game**
-   ```bash
-   cd src
-   python main.py
-   ```
-
-### Alternative Setup
-If you prefer to run without installing dependencies:
-```bash
-cd text-adventure-game/src
-python main.py
-```
-
-## 🎮 How to Play
-
-### Game Commands (All Numeric!)
-- **Numbers (1-8)**: Choose location-specific actions
-- **[0]**: Access global commands menu
-
-### Global Commands Menu (Press 0)
-- **[1]**: Show detailed character status
-- **[2]**: Show inventory with options to use or view details
-- **[3]**: Save your current game
-- **[4]**: Load a previously saved game
-- **[5]**: Show help screen
-- **[6]**: Quit game
-
-### Enhanced Inventory System
-When you access your inventory (Global Menu → 2), you can:
-- **[1] Use an item**: Select items by number to use them
-- **[2] View item details**: Get detailed information about items
-- **[0] Back to game**: Return to the main game
-- Items are clearly marked as "usable" or "not usable"
-- Consumables like food, drinks, and medical supplies can be used
-- Weapons and tools are displayed but cannot be consumed
-
-### Vehicle & Travel System
-- **Short-Distance Travel**: Walk to nearby locations within the same town
-- **Long-Distance Travel**: Use repaired vehicles to travel between towns
-- **Vehicle Repair**: Find car parts and repair broken vehicles
-- **Multiple Towns**: Explore Riverside, Millbrook, and other locations
-- **Permanent Breakdown**: Vehicles break down after long trips - find new ones!
-
-### Rich Location-Specific Searches
-- **Contextual Actions**: Each location has unique search options (e.g., "Search weapon section", "Check camping gear")
-- **Detailed Descriptions**: Rich narrative descriptions for each search action
-- **Smart Item Discovery**: Different items based on what you're searching for
-- **Environmental Storytelling**: Learn about the world through search descriptions
-- **Zombie Encounters**: Random chance of encountering zombies during searches
-
-### Gameplay Tips
-1. **Monitor Your Stats**: Keep an eye on health, hunger, thirst, and fatigue
-2. **Search Locations**: Look around and search for useful items
-3. **Manage Weight**: Your inventory has weight limits - choose items wisely
-4. **Find Safe Shelter**: Some locations are safer for resting than others
-5. **Conserve Fuel**: You might need to walk if you run out of gas
-6. **Prepare for Combat**: Zombies can appear anywhere - stay armed
-
-### Combat System
-- Choose from available weapons (fists, knives, guns, etc.)
-- Different weapons have different damage and accuracy ratings
-- Firearms require ammunition
-- You can attempt to flee from combat
-- Some locations have higher zombie encounter rates
-
-## 📁 Project Structure
-
-```
-text-adventure-game/
-├── src/                          # Source code
-│   ├── main.py                   # Game entry point
-│   ├── game_engine.py            # Main game engine and loop
-│   ├── game_state.py             # Game state management
-│   ├── combat_system.py          # Combat mechanics
-│   ├── test_game.py              # Unit tests
-│   ├── Functions/                # Game function modules
-│   │   ├── __init__.py
-│   │   ├── check_inventory.py    # Inventory management
-│   │   ├── clear_screen.py       # Screen utilities
-│   │   ├── look_around.py        # Location exploration
-│   │   ├── move_location.py      # Movement system
-│   │   ├── read_location_data.py # Location data loading
-│   │   └── ...                   # Other utility functions
-│   └── Assets/                   # Game assets
-│       ├── locations.json        # Location definitions
-│       ├── opening_title.txt     # ASCII art title
-│       └── zombie_intro.txt      # Intro story text
-├── requirements.txt              # Python dependencies
-├── setup.py                     # Package setup (for distribution)
-└── README.md                    # This file
-```
-
-## 🧪 Testing
-
-The game includes comprehensive unit tests covering all major components.
-
-### Running Tests
-```bash
-cd src
-python test_game.py
-```
-
-### With pytest (if installed)
-```bash
-cd src
-pytest test_game.py -v
-```
-
-### Test Coverage
-- Game state management (save/load, inventory, stats)
-- Combat system (zombies, weapons, damage)
-- Location system (data loading, validation)
-- Inventory functions (categorization, item info)
-
-## 🎨 Customization
-
-### Adding New Locations
-Edit `src/Assets/locations.json` to add new locations:
-```json
-{
-    "name": "New Location",
-    "description": "Description of the location",
-    "actions": [
-        {"name": "Action Name", "description": "What the action does"}
-    ],
-    "nearby": ["Connected Location 1", "Connected Location 2"],
-    "items": ["item1", "item2"],
-    "zombie_chance": 0.3,
-    "shelter": true
-}
-```
-
-### Adding New Items
-Modify the item definitions in:
-- `src/Functions/check_inventory.py` (for categorization and info)
-- `src/game_state.py` (for item effects)
-- `src/combat_system.py` (for weapons)
-
-### Modifying Game Balance
-Adjust values in:
-- `src/game_state.py`: Survival stat degradation rates
-- `src/combat_system.py`: Weapon damage and zombie stats
-- `src/Assets/locations.json`: Zombie encounter rates
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Game won't start**
-- Ensure you're running Python 3.8+
-- Check that all files are in the correct directories
-- Try running from the `src` directory
-
-**Save files not working**
-- Ensure the game has write permissions in the directory
-- Save files are created in the same directory as the game
-
-**Missing locations.json**
-- The game will use default locations if the file is missing
-- Check that `Assets/locations.json` exists and is valid JSON
-
-### Error Messages
-The game includes comprehensive error handling and will display helpful messages for most issues.
-
-## 🔧 Development
-
-### Code Style
-- Follow PEP 8 Python style guidelines
-- Use type hints where possible
-- Include docstrings for all functions and classes
-- Write unit tests for new features
-
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
-
-### Future Enhancements
-- Multiplayer support
-- Graphics/GUI interface
-- More complex crafting system
-- Larger world map
-- Character progression system
-- Multiple story paths
-
-## 📜 License
-
-This project is open source and available under the MIT License.
-
-## 🙏 Acknowledgments
-
-- ASCII art title generated using [Patorjk.com](http://patorjk.com/software/taag/) with Banner3-D font
-- Inspired by classic text adventure games
-- Built as a learning project for Python game development
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-1. Check the troubleshooting section above
-2. Review the help system in-game (type `help`)
-3. Check the unit tests for usage examples
-4. Create an issue in the project repository
+A text-based survival game built with Flutter and Dart. This README walks absolute beginners through installing Flutter, setting up your environment, and running the game in a web browser (Chrome).
 
 ---
 
-**Enjoy surviving the zombie apocalypse!** 🧟‍♂️🎮
+## 1) What you need (Beginner-friendly)
+
+- Flutter SDK (includes Dart)
+  - Download: https://docs.flutter.dev/get-started/install
+  - Flutter already bundles Dart; you don’t need to install Dart separately.
+- A web browser (Google Chrome recommended)
+- Git (for cloning the repo): https://git-scm.com/downloads
+- Optional editor: VS Code (https://code.visualstudio.com/) or Android Studio
+
+Tip: After installing Flutter, add the Flutter bin folder to your PATH so you can run `flutter` from a terminal.
+
+---
+
+## 2) Install Flutter and check your setup
+
+1. Install Flutter for your OS using the official guide above.
+2. Open a new terminal and run:
+   ```bash
+   flutter doctor
+   ```
+   - Fix anything Flutter recommends (it will show missing tools or permissions).
+3. Enable web support (if not already enabled):
+   ```bash
+   flutter config --enable-web
+   flutter devices
+   ```
+   You should see a Chrome device listed.
+
+---
+
+## 3) Get the project
+
+```bash
+# Clone the repository
+git clone <REPO_URL>
+cd text-survival-game
+
+# Fetch packages
+flutter pub get
+```
+
+If you previously ran the project on an old Flutter version, it can help to clean first:
+```bash
+flutter clean
+flutter pub get
+```
+
+---
+
+## 4) Run in your browser (Chrome)
+
+```bash
+# Option A: Dev server (hot reload)
+flutter run -d chrome --web-port=8083
+
+# Option B: Build for the web
+flutter build web
+# The output will be in build/web (you can serve it with any static server)
+```
+
+- When using Option A, Flutter will open Chrome automatically (or you can open http://localhost:8083).
+- Use `r` in the terminal for hot reload and `R` for hot restart.
+
+---
+
+## 5) Controls and basic flow
+
+- Start the app → New Game → choose Difficulty (Easy/Medium/Hard)
+- Intro screen → Continue/Skip → Game screen
+- Press `0` any time for the Global Menu (Status, Inventory, Save, Load, Help, Settings, Go Home)
+- Settings let you toggle Dark/Light theme (persists between sessions)
+
+---
+
+## 6) Common issues (and quick fixes)
+
+- “The type 'JSObject' can’t be used as supertype” when targeting web
+  - Cause: Old version of the `web` package after upgrading Flutter.
+  - Fix:
+    ```bash
+    flutter pub upgrade
+    flutter clean
+    flutter pub get
+    ```
+
+- Chrome device not detected
+  - Ensure web is enabled: `flutter config --enable-web`
+  - Verify Chrome is installed and in PATH; run `flutter devices`
+
+- Port is already in use
+  - Use another port: `flutter run -d chrome --web-port=8084`
+
+- Analyzer warnings after upgrade
+  - We’ve migrated deprecated APIs (e.g., `withOpacity()` → `withValues(...)`, `MaterialStatePropertyAll` → `WidgetStatePropertyAll`) so `flutter analyze` should show no issues. If you see new ones after a Flutter upgrade, run `flutter analyze` and update per messages.
+
+---
+
+## 7) Project structure (Flutter)
+
+```
+lib/
+  main.dart                # App entry point
+  constants/app_theme.dart # Centralized theme (dark/light)
+  models/                  # Game models (GameState, etc.)
+  services/                # Game logic (engine, combat, save, story)
+  screens/                 # UI screens (start, intro, game, combat, inventory, settings)
+  widgets/                 # Reusable UI components (buttons, dialogs, status bar)
+assets/
+  locations.json           # Location graph and metadata
+  zombie_intro.txt         # Intro text
+  opening_title.txt        # (Not used for ASCII in UI; story text still present)
+web/                       # Web bootstrap files (index.html, manifest)
+```
+
+---
+
+## 8) Recommended tools
+
+- VS Code + Flutter extension: https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter
+- Android Studio + Flutter plugin: https://developer.android.com/studio
+- Flutter docs: https://docs.flutter.dev/
+- Dart language: https://dart.dev/
+
+---
+
+## 9) Contributing & development tips
+
+- Run static checks: `flutter analyze`
+- Quick web run: `flutter run -d chrome`
+- Hot reload: save file → press `r` in the run terminal
+- Logging: use `debugPrint()` in Dart
+- Theming: change colors in `lib/constants/app_theme.dart`
+- Locations: update `assets/locations.json`; ensure nearby routes are consistent and symmetric within towns
+
+---
+
+## 11) Add Flutter to your PATH (so `flutter` works in any terminal)
+
+- Windows (recommended: GUI method)
+  1. Install Flutter (e.g., extract to `C:\src\flutter`)
+  2. Open: Start → “Environment Variables” → “Edit the system environment variables” → “Environment Variables…”
+  3. Under “User variables” (or “System variables”), select `Path` → Edit → New → add `C:\src\flutter\bin`
+  4. Click OK on all dialogs, then close and reopen your terminal
+  5. Verify:
+     ```powershell
+     flutter --version
+     flutter doctor
+     ```
+  - PowerShell (advanced; beware of long PATH truncation with `setx`):
+    ```powershell
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\\src\\flutter\\bin", "User")
+    # Restart your terminal afterwards
+    ```
+
+- macOS / Linux (bash/zsh)
+  1. Extract Flutter to a folder, e.g., `~/flutter`
+  2. Add Flutter to PATH in your shell rc file:
+     ```bash
+     echo 'export PATH="$PATH:$HOME/flutter/bin"' >> ~/.bashrc   # or ~/.zshrc
+     source ~/.bashrc   # or: source ~/.zshrc
+     ```
+  3. Verify:
+     ```bash
+     flutter --version
+     flutter doctor
+     ```
+
+---
+
+## 12) VS Code one‑click run (launch.json)
+
+- Install VS Code + Flutter extension
+- Open this folder in VS Code
+- Create `.vscode/launch.json` with the following content (already included in this repo if you see the file):
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Web (Chrome, 8083)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "chrome", "--web-port=8083"]
+    }
+  ]
+}
+```
+
+- Now press F5 (or Run → Start Debugging) to launch the app in Chrome on port 8083
+
+---
+
+## 13) Screenshots / GIFs (optional)
+
+- Add screenshots or a GIF to a `docs/` folder (create it if missing), for example:
+  - `docs/start-screen.png`
+  - `docs/game-screen.png`
+  - `docs/flow.gif`
+- Reference them in this README:
+  ```markdown
+  ![Start Screen](docs/start-screen.png)
+  ![Game Screen](docs/game-screen.png)
+  ![Flow](docs/flow.gif)
+  ```
+
+---
+
+## 10) License
+
+MIT License. See LICENSE file if present, or include your preferred license.
+
+---
+
+Happy surviving! 🧟‍♂️
