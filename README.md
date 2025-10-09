@@ -254,6 +254,9 @@ flutter drive \
 
 ### B) Golden tests (pixel-regression)
 - Update goldens (first run or when UI intentionally changes):
+Note: If Chrome is not in PATH on Windows, set the environment variable `CHROME_EXECUTABLE` to your Chrome path, e.g. `C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe`.
+
+
 ```bash
 flutter test --tags=golden --update-goldens
 ```
