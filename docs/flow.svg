@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="576" viewBox="0 0 1024 576">
+  <defs>
+    <style>
+      .bg { fill: #0b0f10; }
+      .box { fill: #11181b; stroke: #00ff41; stroke-width: 3; }
+      .text { fill: #00ff41; font: bold 24px sans-serif; }
+      .sub { fill: #a0f0b0; font: 16px sans-serif; }
+      .arrow { stroke: #00ff41; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00ff41" />
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1024" height="576"/>
+  <rect class="box" x="60" y="80" width="240" height="120" rx="8"/>
+  <text class="text" x="90" y="140">Start Screen</text>
+  <rect class="box" x="392" y="80" width="240" height="120" rx="8"/>
+  <text class="text" x="430" y="120">Intro</text>
+  <text class="sub" x="410" y="150">Continue / Skip</text>
+  <rect class="box" x="724" y="80" width="240" height="120" rx="8"/>
+  <text class="text" x="760" y="140">Game Screen</text>
+  <path class="arrow" d="M300,140 C330,140 362,140 392,140"/>
+  <path class="arrow" d="M632,140 C666,140 700,140 724,140"/>
+  <text class="sub" x="78" y="220">Press 0 for Global Menu</text>
+</svg>
+

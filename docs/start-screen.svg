@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="576" viewBox="0 0 1024 576">
+  <defs>
+    <style>
+      .bg { fill: #0b0f10; }
+      .panel { fill: #11181b; stroke: #00ff41; stroke-width: 4; }
+      .title { fill: #00ff41; font: bold 42px sans-serif; }
+      .subtitle { fill: #a0f0b0; font: 20px sans-serif; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1024" height="576"/>
+  <rect class="panel" x="96" y="96" width="832" height="384" rx="12"/>
+  <text class="title" x="128" y="180">Zombie Survival Story — Start Screen (Placeholder)</text>
+  <text class="subtitle" x="128" y="230">New Game • Continue • Load Game • Settings • Exit</text>
+  <text class="subtitle" x="128" y="270">Matrix-themed styling preview</text>
+</svg>
+

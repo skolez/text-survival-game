@@ -198,18 +198,19 @@ web/                       # Web bootstrap files (index.html, manifest)
 
 ---
 
-## 13) Screenshots / GIFs (optional)
+## 13) Screenshots / GIFs
 
-- Add screenshots or a GIF to a `docs/` folder (create it if missing), for example:
-  - `docs/start-screen.png`
-  - `docs/game-screen.png`
-  - `docs/flow.gif`
-- Reference them in this README:
-  ```markdown
-  ![Start Screen](docs/start-screen.png)
-  ![Game Screen](docs/game-screen.png)
-  ![Flow](docs/flow.gif)
-  ```
+We include placeholder SVGs so the README shows images out of the box. Replace them with real screenshots/GIFs when ready.
+
+- `docs/start-screen.svg`
+- `docs/game-screen.svg`
+- `docs/flow.svg`
+
+Embedded below:
+
+![Start Screen](docs/start-screen.svg)
+![Game Screen](docs/game-screen.svg)
+![Flow](docs/flow.svg)
 
 ---
 

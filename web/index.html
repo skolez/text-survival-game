@@ -32,21 +32,18 @@
   <title>Zombie Survival Story</title>
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
+  <!-- This script adds the Flutter initialization JS code -->
   <script src="flutter.js" defer></script>
 </head>
 <body>
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
+    window.addEventListener('load', function () {
+      // Use the new Flutter web initialization API
+      _flutter.loader.load({
         serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        }
+          // The value below is injected by flutter build, do not touch.
+          serviceWorkerVersion: {{flutter_service_worker_version}},
+        },
       });
     });
   </script>
