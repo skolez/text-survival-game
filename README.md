@@ -221,3 +221,44 @@ MIT License. See LICENSE file if present, or include your preferred license.
 ---
 
 Happy surviving! 🧟‍♂️
+
+
+---
+
+## 14) Automated screenshots and UI tests
+
+This project includes two complementary options:
+
+- Integration screenshots (end-to-end): drives the app and saves PNGs under `screenshots/`.
+- Golden tests (pixel regression): fast, deterministic snapshots for widgets/screens.
+
+### A) Integration screenshots (Web/Chrome)
+Prereqs: Chrome installed; web support enabled (`flutter config --enable-web`).
+
+Run:
+```bash
+flutter drive \
+  --driver=test_driver/integration_test.dart \
+  --target=integration_test/app_flow_test.dart \
+  -d web-server \
+  --browser-name=chrome
+```
+- Output: PNG files in `screenshots/` (e.g., `01-start.png`, `02-difficulty.png`, `03-intro_or_game.png`).
+- Tip: You can commit selected screenshots into `docs/` for the README if desired.
+
+### B) Golden tests (pixel-regression)
+- Update goldens (first run or when UI intentionally changes):
+```bash
+flutter test --tags=golden --update-goldens
+```
+- Run a single golden test file:
+```bash
+flutter test test/golden/start_screen_golden_test.dart
+```
+Artifacts:
+- Baseline PNGs are stored next to the test (via golden_toolkit).
+- Failure diffs appear under a local `failures/` folder (already gitignored).
+
+Why both?
+- Integration screenshots are great for docs and full app flows.
+- Golden tests are fast and catch accidental UI regressions early.
