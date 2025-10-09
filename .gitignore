@@ -69,6 +69,10 @@ flutter/
 flutter.tar.xz
 
 
+# Local helper tools
+scripts/bin/
+
+
 # Test artifacts
 **/failures/*.png
 screenshots/

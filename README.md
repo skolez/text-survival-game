@@ -235,7 +235,13 @@ This project includes two complementary options:
 ### A) Integration screenshots (Web/Chrome)
 Prereqs: Chrome installed; web support enabled (`flutter config --enable-web`).
 
-Run:
+Windows helper script (starts ChromeDriver on :4444):
+```powershell
+# From repo root
+powershell -ExecutionPolicy Bypass -File scripts/launch_chromedriver.ps1
+```
+
+Run the tests:
 ```bash
 flutter drive \
   --driver=test_driver/integration_test.dart \
@@ -243,8 +249,8 @@ flutter drive \
   -d web-server \
   --browser-name=chrome
 ```
-- Output: PNG files in `screenshots/` (e.g., `01-start.png`, `02-difficulty.png`, `03-intro_or_game.png`).
-- Tip: You can commit selected screenshots into `docs/` for the README if desired.
+- Output: PNG files in `screenshots/` (e.g., `01-start.png`, `02-difficulty.png`, `03-intro_or_game.png`, `04-settings_dark.png`, `05-settings_light.png`, `06-start_after_settings.png`).
+- Tip: Commit selected screenshots into `docs/` for the README if desired.
 
 ### B) Golden tests (pixel-regression)
 - Update goldens (first run or when UI intentionally changes):
@@ -258,6 +264,9 @@ flutter test test/golden/start_screen_golden_test.dart
 Artifacts:
 - Baseline PNGs are stored next to the test (via golden_toolkit).
 - Failure diffs appear under a local `failures/` folder (already gitignored).
+
+### C) CI automation (GitHub Actions)
+This repo includes a workflow that runs golden tests and web integration screenshots on every push. Screenshots are uploaded as CI artifacts.
 
 Why both?
 - Integration screenshots are great for docs and full app flows.
