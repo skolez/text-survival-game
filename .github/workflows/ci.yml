@@ -16,17 +16,27 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: '3.35.5'
 
       - name: Flutter pub get
         run: flutter pub get
 
       - name: Run golden tests
         run: flutter test --tags=golden
+      - name: Upload golden diffs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-failures
+          path: test/**/failures/**
+          if-no-files-found: ignore
+
 
       - name: Enable web
         run: flutter config --enable-web
 
       - name: Setup Chrome
+        id: setup-chrome
         uses: browser-actions/setup-chrome@v1
 
       - name: Setup ChromeDriver

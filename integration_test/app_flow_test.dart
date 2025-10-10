@@ -108,4 +108,82 @@ void main() {
       await binding.takeScreenshot('09-game_status');
     }
   });
+
+  testWidgets('Save/Load roundtrip and Move flow (screenshots)',
+      (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    // Start a new game
+    await tester.tap(find.text('NEW GAME'));
+    await tester.pumpAndSettle();
+    final startBtn = find.text('Start');
+    if (startBtn.evaluate().isNotEmpty) {
+      await tester.tap(startBtn);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+    }
+
+    // Open menu -> Save Game
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save Game'));
+    await tester.pumpAndSettle();
+
+    // If no saves yet, create one
+    final createBtn = find.text('Create New Save');
+    if (createBtn.evaluate().isNotEmpty) {
+      await tester.tap(createBtn);
+      await tester.pumpAndSettle();
+      await binding.takeScreenshot('10-save_dialog');
+      await tester.enterText(find.byType(TextField), 'it_save1');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+    } else {
+      // Overwrite first save if list exists
+      final overwrite = find.byIcon(Icons.save).first;
+      if (overwrite.evaluate().isNotEmpty) {
+        await tester.tap(overwrite);
+        await tester.pumpAndSettle();
+      }
+    }
+
+    await binding.takeScreenshot('11-saved');
+
+    // Open menu -> Load Game
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Load Game'));
+    await tester.pumpAndSettle();
+
+    final saveTile = find.text('it_save1');
+    if (saveTile.evaluate().isNotEmpty) {
+      await tester.tap(saveTile);
+      await tester.pumpAndSettle();
+    } else {
+      // Fallback: tap first play icon
+      final play = find.byIcon(Icons.play_arrow).first;
+      if (play.evaluate().isNotEmpty) {
+        await tester.tap(play);
+        await tester.pumpAndSettle();
+      }
+    }
+
+    await binding.takeScreenshot('12-loaded');
+
+    // Try to trigger Move dialog via an action button containing 'Move to Nearby Location'
+    final moveBtn = find.text('Move to Nearby Location');
+    if (moveBtn.evaluate().isNotEmpty) {
+      await tester.tap(moveBtn);
+      await tester.pumpAndSettle();
+      await binding.takeScreenshot('13-move_dialog');
+      // Tap first option
+      final firstOption = find.byType(ListTile).first;
+      if (firstOption.evaluate().isNotEmpty) {
+        await tester.tap(firstOption);
+        await tester.pumpAndSettle();
+        await binding.takeScreenshot('14-after_move');
+      }
+    }
+  });
 }

@@ -22,9 +22,16 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   golden_toolkit: ^0.15.0
 
+
+dependency_overrides:
+  golden_toolkit: 0.15.0
+  characters: 1.4.0
+  material_color_utilities: 0.11.1
+  test_api: 0.7.6
+
 flutter:
   uses-material-design: true
-  
+
   assets:
     - assets/
     - assets/locations.json
