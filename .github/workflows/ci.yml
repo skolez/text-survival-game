@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,18 +45,13 @@ jobs:
       - name: Start ChromeDriver
         run: |
           chromedriver --version
-          chromedriver --port=4444 &
-          sleep 2
+          Start-Process -FilePath chromedriver -ArgumentList '--port=4444'
+          Start-Sleep -Seconds 2
 
       - name: Run integration (web) and take screenshots
         env:
           CHROME_EXECUTABLE: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: |
-          flutter drive \
-            --driver=test_driver/integration_test.dart \
-            --target=integration_test/app_flow_test.dart \
-            -d web-server \
-            --browser-name=chrome
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_flow_test.dart -d web-server --browser-name=chrome
 
       - name: Upload screenshots
         if: always()
