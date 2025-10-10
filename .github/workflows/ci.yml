@@ -51,7 +51,7 @@ jobs:
       - name: Run integration (web) and take screenshots
         env:
           CHROME_EXECUTABLE: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_flow_test.dart -d web-server --browser-name=chrome
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_flow_test.dart -d chrome
 
       - name: Upload screenshots
         if: always()

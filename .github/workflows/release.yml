@@ -1,0 +1,41 @@
+name: Release Web Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.5'
+
+      - name: Enable web
+        run: flutter config --enable-web
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build web (release)
+        run: flutter build web --release
+
+      - name: Archive web build
+        run: |
+          Compress-Archive -Path "build/web/*" -DestinationPath "web-dist.zip"
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: web-dist.zip
+
