@@ -39,27 +39,10 @@ jobs:
         id: setup-chrome
         uses: browser-actions/setup-chrome@v1
 
-      - name: Setup ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
-
-      - name: Start ChromeDriver
-        run: |
-          chromedriver --version
-          Start-Process -FilePath chromedriver -ArgumentList '--port=4444' -PassThru
-          Start-Sleep -Seconds 3
-
-      - name: Run integration (web) and take screenshots
+      - name: Run integration tests (no screenshots)
         env:
           CHROME_EXECUTABLE: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: |
-          flutter drive `
-            --driver=test_driver/integration_test.dart `
-            --target=integration_test/app_flow_test.dart `
-            -d web-server `
-            --web-browser-flag="--headless" `
-            --web-browser-flag="--disable-gpu" `
-            --web-browser-flag="--no-sandbox" `
-            --web-browser-flag="--disable-dev-shm-usage"
+        run: flutter test -d chrome integration_test/
 
       - name: Upload screenshots
         if: always()
@@ -67,5 +50,5 @@ jobs:
         with:
           name: screenshots
           path: screenshots/**/*.png
-          if-no-files-found: warn
+          if-no-files-found: ignore
 
