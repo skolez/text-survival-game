@@ -62,4 +62,50 @@ void main() {
 
     await binding.takeScreenshot('06-start_after_settings');
   });
+
+  testWidgets('Game menu: open global menu and inventory (screenshots)',
+      (WidgetTester tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    // Start a new game
+    await tester.tap(find.text('NEW GAME'));
+    await tester.pumpAndSettle();
+    final startBtn = find.text('Start');
+    if (startBtn.evaluate().isNotEmpty) {
+      await tester.tap(startBtn);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+    }
+
+    // Open global menu via the AppBar settings icon
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+
+    await binding.takeScreenshot('07-global_menu');
+
+    // Tap Inventory in the menu
+    final inventory = find.text('Inventory');
+    if (inventory.evaluate().isNotEmpty) {
+      await tester.tap(inventory);
+      await tester.pumpAndSettle();
+      await binding.takeScreenshot('08-inventory');
+
+      // Back from Inventory
+      final backFinder = find.byTooltip('Back');
+      if (backFinder.evaluate().isNotEmpty) {
+        await tester.tap(backFinder);
+        await tester.pumpAndSettle();
+      }
+    }
+
+    // Open menu again and show status
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+    final showStatus = find.text('Show Status');
+    if (showStatus.evaluate().isNotEmpty) {
+      await tester.tap(showStatus);
+      await tester.pumpAndSettle();
+      await binding.takeScreenshot('09-game_status');
+    }
+  });
 }
