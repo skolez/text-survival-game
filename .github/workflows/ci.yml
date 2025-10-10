@@ -18,8 +18,52 @@ jobs:
           channel: stable
           flutter-version: '3.35.5'
 
+
+      - name: Cache Flutter pub and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            C:\Users\runneradmin\AppData\Local\Pub\Cache
+            .dart_tool
+            build
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+
+      - name: Cache build outputs (optional)
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Restore pub cache (Windows fallback)
+        uses: actions/cache@v4
+        with:
+          path: C:\\Users\\runneradmin\\AppData\\Local\\Pub\\Cache
+          key: ${{ runner.os }}-pubwin-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pubwin-
+
+      - name: Cache Flutter SDK (tool cache)
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.tool_cache }}/flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+
+
       - name: Flutter pub get
         run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
 
       - name: Run golden tests
         run: flutter test --tags=golden
@@ -32,25 +76,11 @@ jobs:
           if-no-files-found: ignore
 
 
-      - name: Enable web
-        run: flutter config --enable-web
 
-      - name: Setup Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v1
+      - name: Run unit tests (excluding goldens)
+        run: flutter test -x golden
 
-      - name: Run integration tests (no screenshots)
-        env:
-          CHROME_EXECUTABLE: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: flutter test -d chrome integration_test/
 
-      - name: Upload screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: screenshots/**/*.png
-          if-no-files-found: ignore
 
 
   integration-screenshots:
@@ -75,6 +105,15 @@ jobs:
 
       - name: Flutter pub get
         run: flutter pub get
+
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Start ChromeDriver
+        run: |
+          chromedriver --version
+          Start-Process -FilePath chromedriver -ArgumentList '--port=4444' -PassThru | Out-Null
+          Start-Sleep -Seconds 3
 
       - name: Run integration (web) with screenshots
         env:
