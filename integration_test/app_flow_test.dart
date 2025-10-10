@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -5,6 +7,12 @@ import 'package:zombie_survival_game/main.dart' as app;
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  // Ensure screenshots directory exists
+  final screenshotsDir = Directory('screenshots');
+  if (!screenshotsDir.existsSync()) {
+    screenshotsDir.createSync(recursive: true);
+  }
 
   testWidgets('Start -> Difficulty -> Intro (screenshots)',
       (WidgetTester tester) async {

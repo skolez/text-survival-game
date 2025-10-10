@@ -45,13 +45,21 @@ jobs:
       - name: Start ChromeDriver
         run: |
           chromedriver --version
-          Start-Process -FilePath chromedriver -ArgumentList '--port=4444'
-          Start-Sleep -Seconds 2
+          Start-Process -FilePath chromedriver -ArgumentList '--port=4444' -PassThru
+          Start-Sleep -Seconds 3
 
       - name: Run integration (web) and take screenshots
         env:
           CHROME_EXECUTABLE: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_flow_test.dart -d chrome
+        run: |
+          flutter drive `
+            --driver=test_driver/integration_test.dart `
+            --target=integration_test/app_flow_test.dart `
+            -d web-server `
+            --web-browser-flag="--headless" `
+            --web-browser-flag="--disable-gpu" `
+            --web-browser-flag="--no-sandbox" `
+            --web-browser-flag="--disable-dev-shm-usage"
 
       - name: Upload screenshots
         if: always()
